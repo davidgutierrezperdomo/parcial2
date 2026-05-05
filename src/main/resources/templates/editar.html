@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/springsecurity">
+<head>
+    <meta charset="UTF-8">
+    <title>Editar Consulta</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; background-color: #f4f7f6; }
+        .container { background: white; padding: 25px; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); max-width: 500px; margin: auto; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; color: #333; }
+        input, select, textarea { width: 100%; padding: 10px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
+        input[readonly], textarea[readonly], select[disabled] { background-color: #e9ecef; cursor: not-allowed; }
+        .btn-save { background-color: #0056b3; color: white; padding: 12px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-top: 10px; }
+        .btn-cancel { display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px; }
+        .alert { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 4px; border: 1px solid #ffeeba; margin-bottom: 20px; font-size: 14px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Modificar Consulta</h1>
+
+    <div sec:authorize="hasRole('PACIENTE')" class="alert">
+        Solo puedes actualizar el horario de tus citas asignadas.
+    </div>
+
+    <form th:action="@{/consultas/guardar}" th:object="${consulta}" method="post">
+        <input type="hidden" th:field="*{id}">
+
+        <div class="form-group">
+            <label>Nombre del paciente:</label>
+            <input type="text" th:field="*{nombrePaciente}" maxlength="40" pattern="[A-Za-z0-9 ]+"
+                   th:readonly="${#authorization.expression('hasRole(''PACIENTE'')')}" required>
+        </div>
+
+        <div class="form-group">
+            <label>Motivo de la consulta:</label>
+            <textarea th:field="*{motivoConsulta}" maxlength="100" rows="3"
+                      th:readonly="${#authorization.expression('hasRole(''PACIENTE'')')}" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label>Numero de consultorio:</label>
+            <input type="number" th:field="*{numeroConsultorio}"
+                   th:readonly="${#authorization.expression('hasRole(''PACIENTE'')')}" required>
+        </div>
+
+        <div style="display: flex; gap: 10px;">
+            <div class="form-group" style="flex: 1;">
+                <label>Hora inicio:</label>
+                <input type="time" th:field="*{horaInicio}" required>
+            </div>
+            <div class="form-group" style="flex: 1;">
+                <label>Hora fin:</label>
+                <input type="time" th:field="*{horaFin}" required>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Medico:</label>
+            <select th:field="*{medico}" required
+                    th:disabled="${#authorization.expression('hasRole(''PACIENTE'')')}">
+                <option th:each="m : ${listaMedicos}" th:value="${m.id}" th:text="${m.nombre}"></option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-save">Actualizar consulta</button>
+        <a th:href="@{/consultas}" class="btn-cancel">Volver a la lista</a>
+    </form>
+</div>
+
+</body>
+</html>

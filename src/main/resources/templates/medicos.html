@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Medicos</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #0056b3; color: white; }
+        .btn { padding: 8px 12px; text-decoration: none; border-radius: 4px; color: white; font-weight: bold; display: inline-block; font-size: 13px; }
+        .btn-add { background-color: #28a745; }
+        .btn-edit { background-color: #ffc107; color: black; }
+        .btn-delete { background-color: #dc3545; }
+        .btn-back { background-color: #6c757d; }
+        .actions { display: flex; gap: 8px; }
+    </style>
+</head>
+<body>
+<h1>Medicos</h1>
+<div class="actions">
+    <a th:href="@{/medicos/nuevo}" class="btn btn-add">Agregar medico</a>
+    <a th:href="@{/consultas}" class="btn btn-back">Volver a consultas</a>
+</div>
+
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Nombre</th>
+        <th>Acciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="medico : ${listaMedicos}">
+        <td th:text="${medico.id}"></td>
+        <td th:text="${medico.nombre}"></td>
+        <td>
+            <a class="btn btn-edit" th:href="@{/medicos/editar/{id}(id=${medico.id})}">Editar</a>
+            <a class="btn btn-delete" th:href="@{/medicos/eliminar/{id}(id=${medico.id})}"
+               onclick="return confirm('Seguro que deseas eliminar este medico?')">Eliminar</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>

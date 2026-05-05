@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nueva Consulta</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { font-weight: bold; display: block; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; max-width: 400px; padding: 8px; box-sizing: border-box; }
+        .btn-save { background-color: #28a745; color: white; padding: 10px 15px; border: none; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .btn-cancel { background-color: #dc3545; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px; font-weight: bold; margin-left: 10px; }
+    </style>
+</head>
+<body>
+<h1>Registrar Consulta</h1>
+<form th:action="@{/consultas/guardar}" th:object="${consulta}" method="post">
+
+    <div class="form-group">
+        <label>Nombre del paciente (max 40):</label>
+        <input type="text" th:field="*{nombrePaciente}" maxlength="40" pattern="[A-Za-z0-9 ]+" required>
+    </div>
+
+    <div class="form-group">
+        <label>Motivo de la consulta (max 100):</label>
+        <textarea th:field="*{motivoConsulta}" maxlength="100" rows="3" required></textarea>
+    </div>
+
+    <div class="form-group">
+        <label>Numero de consultorio:</label>
+        <input type="number" th:field="*{numeroConsultorio}" required>
+    </div>
+
+    <div class="form-group">
+        <label>Hora de inicio:</label>
+        <input type="time" th:field="*{horaInicio}" required>
+    </div>
+
+    <div class="form-group">
+        <label>Hora de finalizacion:</label>
+        <input type="time" th:field="*{horaFin}" required>
+    </div>
+
+    <div class="form-group">
+        <label>Medico:</label>
+        <select th:field="*{medico}" required>
+            <option value="" disabled selected>-- Selecciona un medico --</option>
+            <option th:each="m : ${listaMedicos}" th:value="${m.id}" th:text="${m.nombre}"></option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn-save">Guardar consulta</button>
+    <a th:href="@{/consultas}" class="btn-cancel">Cancelar</a>
+</form>
+</body>
+</html>
